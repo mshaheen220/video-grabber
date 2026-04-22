@@ -1,0 +1,18 @@
+# General
+- Project: Video Grabber (Media Downloader API)
+- Language: Python (Backend) / JavaScript (Bookmarklet)
+- Environment: Developed on macOS, deployed on Windows Server.
+
+# Python & Flask Rules
+- Always use `os.path` (or `pathlib`) for file paths to ensure compatibility between macOS (development) and Windows (production). Do not hardcode forward or backslashes for path construction.
+- Maintain standard PEP 8 formatting.
+- Ensure graceful error handling, especially for network requests (`requests`) and file system operations.
+
+# Plex & Media Rules
+- Enforce strict Plex naming conventions. Seasons and Episodes MUST be zero-padded to two digits (e.g., `S01E01`, not `S1E1`).
+- Always sanitize filenames (using `yt_dlp.utils.sanitize_filename` or similar) before saving to disk, as Windows strictly prohibits characters like `:`, `?`, `<`, `>`, `*`, `|`, `"`.
+
+# yt-dlp Rules
+- Use `yt-dlp`'s internal Python API (`YoutubeDL`) rather than invoking it via subprocess.
+- Rely on `.mkv` for video merging format to ensure maximum compatibility for mixed audio/video streams via FFmpeg.
+- Run all download tasks asynchronously (e.g., via `threading` or background tasks) so the Flask API responds immediately to the client and does not block.
